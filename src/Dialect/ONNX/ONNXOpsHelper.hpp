@@ -37,8 +37,15 @@ struct OnnxBuilder final : DialectBuilder {
   Value div(Value A, Value B) const;
   Value matmul(Type Y, Value A, Value B) const;
 
-  Value reshape(Type outputType, Value input, Value shape) const;
-  Value transpose(Type outputType, Value input, ArrayAttr perm) const;
+  // Generate an 'onnx.reshape' operation on the 'input' tensor, the new shape
+  // is provided by 'shapeDims'.
+  Value reshape(
+      const Value input, const ArrayRef<DimIndexExpr> shapeDims) const;
+
+  // Generate a 'onnx.Transpose' operation on the 'input' tensor given the
+  // permutation array 'perm' and the operator output dimensions 'outputDims'.
+  Value transpose(const Value input, const ArrayRef<int64_t> perm,
+      const ArrayRef<DimIndexExpr> outputDims) const;
 };
 
 } // namespace mlir
@@ -113,7 +120,7 @@ mlir::DenseElementsAttr getDenseElementAttributeFromONNXValue(
 
 mlir::ONNXConstantOp getONNXConstantOp(mlir::Value value);
 mlir::Value getONNXConstantOpFromDenseAttr(
-    mlir::PatternRewriter &rewriter, mlir::Location loc, mlir::Attribute dense);
+    mlir::OpBuilder &builder, mlir::Location loc, mlir::Attribute dense);
 bool isFromNone(mlir::Value value);
 mlir::Type getBroadcastedRankedType(mlir::Type type1, mlir::Type type2);
 

@@ -13,8 +13,10 @@
 //===----------------------------------------------------------------------===//
 
 #include "src/Dialect/ONNX/ONNXOpsHelper.hpp"
+#include "src/Dialect/Krnl/KrnlHelper.hpp"
 #include "src/Dialect/ONNX/IndexExpr.hpp"
 #include "src/Dialect/ONNX/ONNXOps.hpp"
+#include "src/Support/KrnlSupport.hpp"
 
 // Identity affine
 using namespace mlir;
@@ -42,13 +44,84 @@ Value OnnxBuilder::matmul(Type Y, Value A, Value B) const {
   return b.create<ONNXMatMulOp>(loc, Y, A, B);
 }
 
-Value OnnxBuilder::reshape(Type outputType, Value input, Value shape) const {
-  return b.create<ONNXReshapeOp>(loc, outputType, input, shape);
+Value OnnxBuilder::reshape(
+    const Value input, const ArrayRef<DimIndexExpr> shapeDims) const {
+  assert(!shapeDims.empty() && "Shape dimensions should not be empty");
+
+  ShapedType inputType = input.getType().cast<ShapedType>();
+  Type elementType = inputType.getElementType();
+
+  // If the output dimensions are all literals the 'onnx/Reshape' operation
+  // can take the new shape via an 'onnx.Constant'.
+  if (llvm::all_of(
+          shapeDims, [](const DimIndexExpr &dim) { return dim.isLiteral(); })) {
+    SmallVector<int64_t, 6> shape;
+    for (const IndexExpr &dim : shapeDims)
+      shape.push_back(dim.getLiteral());
+
+    auto constantOp =
+        getONNXConstantOpFromDenseAttr(b, loc, b.getI64TensorAttr(shape));
+
+    Value reshapeRes = b.create<ONNXReshapeOp>(
+        loc, MemRefType::get(shape, elementType), input, constantOp);
+
+    return reshapeRes;
+  }
+
+  MemRefBuilder memRefBuilder(b, loc);
+  KrnlBuilder krnlBuilder(memRefBuilder);
+
+  // When the output dimensions aren't all literals we need to generate code
+  // to compute the shape. Allocate a buffer and store the putput dimension
+  // into it.
+  IndexType indexTy = b.getIndexType();
+  int64_t length = shapeDims.size();
+  memref::AllocOp alloc =
+      memRefBuilder.alignedAlloc(MemRefType::get({length}, indexTy), 16);
+
+  for (int64_t i = 0; i < length; ++i) {
+    Value index = emitConstantOp(b, loc, indexTy, i);
+    Value data = shapeDims[i].getValue();
+    krnlBuilder.store(data, alloc, index);
+  }
+
+  // Now create the 'onnx.Reshape' operation. Because the shape is not a
+  // compile time constant it is effectively unknown.
+  SmallVector<int64_t> shape(length, -1);
+  Value reshapeRes = b.create<ONNXReshapeOp>(
+      loc, MemRefType::get(shape, elementType), input, alloc);
+
+  // The 'onnx.Reshape' operation yields a memref with unknown extents, so we
+  // need to explicitly cast the result to the know size.
+  SmallVector<int64_t, 6> castOutputShape;
+  for (const IndexExpr &dim : shapeDims)
+    castOutputShape.push_back(dim.isLiteral() ? dim.getLiteral() : -1);
+
+  Value castRes = memRefBuilder.cast(
+      reshapeRes, MemRefType::get(castOutputShape, elementType));
+
+  return castRes;
 }
 
-Value OnnxBuilder::transpose(
-    Type outputType, Value input, ArrayAttr perm) const {
-  return b.create<ONNXTransposeOp>(loc, outputType, input, perm);
+// Transpose the 'input' tensor given the permutation array.
+Value OnnxBuilder::transpose(const Value input, const ArrayRef<int64_t> perm,
+    const ArrayRef<DimIndexExpr> outputDims) const {
+  assert(!outputDims.empty() && "Output dimensions should not be empty");
+  assert(!perm.empty() && perm.size() == outputDims.size() &&
+         "Expecitng valid permutation array");
+
+  // Compute the shape of the 'onnx.Transpose' result.
+  SmallVector<int64_t, 6> shape;
+  for (const IndexExpr &dim : outputDims)
+    shape.push_back(dim.isLiteral() ? dim.getLiteral() : -1);
+
+  // Create the "onnx.Transpose" operation.
+  ShapedType inputType = input.getType().cast<ShapedType>();
+  Value transposeRes = b.create<ONNXTransposeOp>(loc,
+      MemRefType::get(shape, inputType.getElementType()), input,
+      b.getI64ArrayAttr(perm));
+
+  return transposeRes;
 }
 
 AffineMap getIdentityDimMap(Builder &builder) {
@@ -213,8 +286,8 @@ ONNXConstantOp getONNXConstantOp(Value value) {
 }
 
 Value getONNXConstantOpFromDenseAttr(
-    PatternRewriter &rewriter, Location loc, Attribute dense) {
-  return rewriter.create<ONNXConstantOp>(loc, Attribute(), dense);
+    OpBuilder &builder, Location loc, Attribute dense) {
+  return builder.create<ONNXConstantOp>(loc, Attribute(), dense);
 }
 
 // Returns true if the Value is defined by none constant
