@@ -311,7 +311,7 @@ enum class IndexExprKind {
 // Data structure to hold all the IndexExpr in a given scope. A scope define
 // a scope during which each of the dynamic dimensions are defined and all of
 // the symbols hold constant in that scope.
-class IndexExprScope {
+class IndexExprScope final {
   friend class IndexExprImpl;
   friend class IndexExpr;
   friend class LiteralIndexExpr;
@@ -327,7 +327,7 @@ public:
   IndexExprScope(OpBuilder *rewriter, IndexExprScope *enclosingScope);
   IndexExprScope(DialectBuilder &db, IndexExprScope *enclosingScope);
   // Destructor which release all IndexExpr associated with this scope.
-  virtual ~IndexExprScope();
+  ~IndexExprScope();
 
   IndexExprScope() = delete;
   IndexExprScope(const IndexExprScope &) = delete;

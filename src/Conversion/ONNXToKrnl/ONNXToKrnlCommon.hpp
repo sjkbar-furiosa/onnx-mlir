@@ -353,6 +353,9 @@ void populateLoweringONNXShapeOpPattern(
 void populateLoweringONNXSliceOpPattern(
     RewritePatternSet &patterns, MLIRContext *ctx);
 
+void populateLoweringONNXSpaceToDepthOpPattern(
+    RewritePatternSet &patterns, MLIRContext *ctx);
+
 void populateLoweringONNXSqueezeOpPattern(
     RewritePatternSet &patterns, MLIRContext *ctx);
 
