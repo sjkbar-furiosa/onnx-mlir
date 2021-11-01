@@ -1014,3 +1014,22 @@ def KrnlRandomNormalOp : Op<Krnl_Dialect, "random_normal",
 
   let results = (outs );
 }
+
+def KrnlCategoryMapperOp : Op<Krnl_Dialect, "category_mapper", [NoSideEffect]> {
+  let summary = "Maps a tensor of strings to a tensor of integers and vice versa.";
+  let description = [{
+    Krnl operation that converts a tensor of strings into a tensor of integer (or 
+    viceversa). Each input string/integer is mapped to an integer/string by looking it up
+    in the in the list 'cats_strings/cats_int64s'. Is a match is found the corresponding
+    entry in 'cats_int64s/cats/strings' is returned, otherwise 'default_int64/
+    default_string' is returned.
+  }];
+
+  let arguments = (ins AnyTypeOf<[MemRefOf<[I64]>]>:$in, 
+    I64ArrayAttr:$cats_int64s,
+    StrArrayAttr:$cats_strings,
+    DefaultValuedAttr<I64Attr, "-1">:$default_int64,
+    DefaultValuedAttr<StrAttr, "\"_Unused\"">:$default_string);
+
+  let results = (outs AnyTypeOf<[MemRefOf<[I64]>]>:$out);
+}

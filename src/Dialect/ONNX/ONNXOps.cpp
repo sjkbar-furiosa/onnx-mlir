@@ -4372,9 +4372,37 @@ LogicalResult ONNXCastMapOp::inferShapes(
   return emitError(NOT_IMPLEMENTED_MESSAGE);
 }
 
+static LogicalResult verify(ONNXCategoryMapperOp op) {
+  ONNXCategoryMapperOpAdaptor operandAdaptor(op);
+
+  // Check input.
+  const Value &X = operandAdaptor.X();
+  if (!hasShapeAndRank(X)) {
+    // Won't be able to do any checking at this stage.
+    return success();
+  }
+
+  // Check attributes.
+  if (op.default_stringAttr() && op.default_int64Attr())
+    return op.emitError("Only one of 'default_int64' or 'default_String; "
+                        "attributes must be specified");
+
+  const ArrayAttr &ints = operandAdaptor.cats_int64s();
+  const ArrayAttr &strings = operandAdaptor.cats_strings();
+  if (ints.empty() || strings.empty())
+    return op.emitError("cats_int64 and cats_strings should not be empty");
+
+  if (ints.size() != strings.size())
+    return op.emitError(
+        "cats_int64 and cats_strings should have the same size");
+
+  return success();
+}
+
 LogicalResult ONNXCategoryMapperOp::inferShapes(
     std::function<void(mlir::Region &)> doShapeInference) {
-  return emitError(NOT_IMPLEMENTED_MESSAGE);
+  getResult().setType(getOperand().getType());
+  return success();
 }
 
 LogicalResult ONNXDictVectorizerOp::inferShapes(

@@ -342,14 +342,14 @@ void BuildKrnlLoop::createDefineAndIterateOp(Value memRefOperand) {
   createIterateOp();
 }
 
-BlockArgument &BuildKrnlLoop::getInductionVar(int originalLoopIndex) {
+BlockArgument &BuildKrnlLoop::getInductionVar(int originalLoopIndex) const {
   // Check if loop iteration variable is within bounds.
   assert(originalLoopIndex >= 0 && originalLoopIndex < originalLoopNum &&
          "Original loop index is out of bounds.");
   return iterBlock->getArguments()[originalLoopIndex];
 }
 
-ArrayRef<BlockArgument> BuildKrnlLoop::getAllInductionVar() {
+ArrayRef<BlockArgument> BuildKrnlLoop::getAllInductionVar() const {
   return ArrayRef<BlockArgument>(
       iterBlock->getArguments().begin(), iterBlock->getArguments().end());
 }
@@ -432,7 +432,7 @@ void KrnlBuilder::permute(ValueRange loops, ArrayRef<int64_t> map) {
   b.create<KrnlPermuteOp>(loc, loops, map);
 }
 
-ValueRange KrnlBuilder::getInductionVarValue(ValueRange loops) {
+ValueRange KrnlBuilder::getInductionVarValue(ValueRange loops) const {
   return b.create<KrnlGetInductionVariableValueOp>(loc, loops).getResults();
 }
 

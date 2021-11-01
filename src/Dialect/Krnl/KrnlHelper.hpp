@@ -207,27 +207,27 @@ public:
 
   // Get the (original loop) induction variable associated with the given
   // index. Use the index returned when pushing the bounds.
-  BlockArgument &getInductionVar(int originalLoopIndex);
+  BlockArgument &getInductionVar(int originalLoopIndex) const;
 
   // Get all of the (original loop) induction variables.
-  ArrayRef<BlockArgument> getAllInductionVar();
+  ArrayRef<BlockArgument> getAllInductionVar() const;
 
   // Get a reference to the code region of the optimization operation.
   // This allows us to set the insertion point to the inner block of the
   // loop nest optimization operation.
   // Deprecated.
-  Block *getOptimizationBlock() { return optBlock; }
+  Block *getOptimizationBlock() const { return optBlock; }
 
   // Get a reference to the code region of the iteration operation.
   // This allows us to set the insertion point to the inner block of the
   // loop nest iteration operation.
-  Block *getIterateBlock() { return iterBlock; }
+  Block *getIterateBlock() const { return iterBlock; }
 
   // Get original loop nest.
-  std::vector<Value> &getOriginalLoops() { return originalLoops; }
+  const std::vector<Value> &getOriginalLoops() const { return originalLoops; }
 
   // Get optimized loop nest.
-  std::vector<Value> &getOptimizedLoops() { return optLoops; }
+  const std::vector<Value> &getOptimizedLoops() const { return optLoops; }
 
 private:
   // Required for emitting operations.
@@ -288,7 +288,7 @@ struct KrnlBuilder : public DialectBuilder {
   ValueRange defineLoops(int64_t originalLoopNum);
   ValueRange block(Value loop, int64_t blockSize);
   void permute(ValueRange loops, ArrayRef<int64_t> map);
-  ValueRange getInductionVarValue(ValueRange loops);
+  ValueRange getInductionVarValue(ValueRange loops) const;
 
   // Lambda passes loop indices as 2nd parameter.
   void iterate(ValueRange originalLoops, ValueRange optimizedLoops,
