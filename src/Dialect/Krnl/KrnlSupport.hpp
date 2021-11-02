@@ -35,9 +35,6 @@ memref::AllocOp getAllocOfGetRef(KrnlGetRefOp *getRef);
 /// Return the top block.
 Block *getTopBlock(Operation *op);
 
-/// Retrieve function which contains the current operation.
-FuncOp getContainingFunction(Operation *op);
-
 //===----------------------------------------------------------------------===//
 // Perform checks or get statistics about Krnl-level operations.
 //===----------------------------------------------------------------------===//
@@ -77,31 +74,6 @@ bool opBeforeOp(Block *block, Operation *beforeOp, Operation *afterOp);
 
 /// Check Alloc operation result is used by a krnl.getref.
 bool checkOpResultIsUsedByGetRef(memref::AllocOp *allocOp);
-
-/// Check is all dimensions are known at compile time.
-bool hasAllConstantDimensions(MemRefType memRefType);
-
-/// Get the MemRef element size in bytes.
-unsigned getMemRefEltSizeInBytes(MemRefType memRefType);
-
-/// Get the size of a MemRef in bytes.
-int64_t getMemRefSizeInBytes(Value value);
-
-/// Get the size of a MemRef in bytes.
-/// If all the dimensions are static, emit a constant.
-/// Otherwise, emit runtime computations.
-Value getDynamicMemRefSizeInBytes(
-    PatternRewriter &rewriter, Location loc, Value val);
-
-/// Get the size of a dynamic MemRef in bytes.
-Value getDynamicMemRefSizeInBytes(MemRefType type, Location loc,
-    PatternRewriter &rewriter, memref::AllocOp allocOp);
-
-/// Get order number of dynamic index.
-int64_t getAllocArgIndex(memref::AllocOp allocOp, int64_t index);
-
-/// Get AllocOp alignment if it exists otherwise return zero.
-int64_t getAllocAlignment(memref::AllocOp allocOp);
 
 //===----------------------------------------------------------------------===//
 // Live range analysis support.

@@ -15,4 +15,8 @@ add_onnx_mlir_library(OMKrnlToLLVM
   MLIRStandardToLLVM
   MLIRVectorToLLVM
   onnx
+
+  LINK_LIBS PUBLIC
+  OMSupport
+  OMKrnlOps
   )

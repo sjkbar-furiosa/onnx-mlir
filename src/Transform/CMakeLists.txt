@@ -15,6 +15,8 @@ add_onnx_mlir_library(OMEnableMemoryPool
 
   LINK_LIBS PUBLIC
   OMSupport
+  OMKrnlOps
+  OMONNXOps
   MLIRTransformUtils
   )
 
@@ -23,6 +25,7 @@ add_onnx_mlir_library(OMOptimizeMemoryPools
 
   LINK_LIBS PUBLIC
   OMSupport
+  OMKrnlOps
   MLIRTransformUtils
   )
 
@@ -32,6 +35,7 @@ add_onnx_mlir_library(OMBundleMemoryPools
 
   LINK_LIBS PUBLIC
   OMSupport
+  OMKrnlOps
   MLIRTransformUtils
   )
 
@@ -40,6 +44,7 @@ add_onnx_mlir_library(OMDisconnectKrnlDimFromAlloc
 
   LINK_LIBS PUBLIC
   OMSupport
+  OMKrnlOps
   MLIRTransformUtils
   )
 
@@ -48,5 +53,6 @@ add_onnx_mlir_library(OMLowerKrnlShape
 
   LINK_LIBS PUBLIC
   OMSupport
+  OMKrnlOps
   MLIRTransformUtils
   )

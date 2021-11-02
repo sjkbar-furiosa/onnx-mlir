@@ -38,6 +38,7 @@
 #include "src/Dialect/ONNX/ONNXOps.hpp"
 #include "src/Dialect/ONNX/ONNXOpsHelper.hpp"
 #include "src/Pass/Passes.hpp"
+#include "src/Support/Common.hpp"
 #include "src/Support/IndexExpr.hpp"
 #include "src/Transform/ONNX/ConstPropHelper.hpp"
 
@@ -396,17 +397,6 @@ void populateLoweringONNXCompressOpPattern(
     RewritePatternSet &patterns, MLIRContext *ctx);
 
 bool checkOpResultIsUsedByGetRef(memref::AllocOp *allocOp);
-
-/// This function returns the index in the list of alloc arguments of the
-/// dynamic dimension corresponding to `index` in the MemRef shape.
-/// As an example:
-///
-/// alloc(%d0, %d1, %d2) : memref<10x?x?x20x?x30xf32>
-///
-/// In the above alloc the list of alloc arguments is being represented by
-/// %d0, %d1 and %d2. Their indices 0, 1, 2 correspond to `index` values
-/// 1, 2 and 4 in the MemRef shape respectively
-int64_t getAllocArgIndex(memref::AllocOp allocOp, int64_t index);
 
 /// This function returns a location with the corresponding ONNX operator name
 /// inside. This is useful when tracing what expanded MLIR instructions

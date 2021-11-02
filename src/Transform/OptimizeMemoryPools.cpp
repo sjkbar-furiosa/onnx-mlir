@@ -23,8 +23,9 @@
 #include "llvm/ADT/SmallSet.h"
 
 #include "src/Dialect/Krnl/KrnlOps.hpp"
+#include "src/Dialect/Krnl/KrnlSupport.hpp"
 #include "src/Pass/Passes.hpp"
-#include "src/Support/KrnlSupport.hpp"
+#include "src/Support/Common.hpp"
 
 using namespace mlir;
 namespace {
