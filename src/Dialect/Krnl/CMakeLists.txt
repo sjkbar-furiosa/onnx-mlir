@@ -13,6 +13,7 @@ add_onnx_mlir_library(OMKrnlOps
   KrnlOps.cpp
   KrnlTypes.cpp
   KrnlHelper.cpp
+  KrnlSupport.cpp
   SimplifyKrnl.cpp
 
   DEPENDS
@@ -20,5 +21,5 @@ add_onnx_mlir_library(OMKrnlOps
   OMSpecializedKernelOpInterfaceIncGen
 
   LINK_LIBS PUBLIC
-  OMONNXOps
+  OMSupport
   )

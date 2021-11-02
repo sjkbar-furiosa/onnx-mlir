@@ -13,8 +13,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "src/Dialect/ONNX/IndexExpr.hpp"
-#include "src/Dialect/ONNX/IndexExprDetail.hpp"
+#include "src/Support/IndexExpr.hpp"
+#include "src/Support/IndexExprDetail.hpp"
 #include "src/Dialect/ONNX/MLIRDialectBuilder.hpp"
 
 #include "mlir/Dialect/Affine/IR/AffineOps.h"

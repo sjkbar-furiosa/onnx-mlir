@@ -34,11 +34,11 @@
 
 #include "src/Dialect/Krnl/KrnlHelper.hpp"
 #include "src/Dialect/Krnl/KrnlOps.hpp"
-#include "src/Dialect/ONNX/IndexExpr.hpp"
+#include "src/Dialect/Krnl/KrnlSupport.hpp"
 #include "src/Dialect/ONNX/ONNXOps.hpp"
 #include "src/Dialect/ONNX/ONNXOpsHelper.hpp"
 #include "src/Pass/Passes.hpp"
-#include "src/Support/KrnlSupport.hpp"
+#include "src/Support/IndexExpr.hpp"
 #include "src/Transform/ONNX/ConstPropHelper.hpp"
 
 using namespace mlir;

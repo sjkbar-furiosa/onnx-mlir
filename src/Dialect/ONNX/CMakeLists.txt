@@ -14,8 +14,6 @@ add_onnx_mlir_rewriter(Rewrite)
 add_onnx_mlir_library(OMONNXOps
   ONNXOps.cpp
   ONNXOpsHelper.cpp
-  IndexExpr.cpp
-  IndexExprDetail.cpp
   MLIRDialectBuilder.cpp
   Rewrite.cpp
 
@@ -54,7 +52,6 @@ add_onnx_mlir_library(OMONNXOps
   OMShapeInferenceOpInterfaceIncGen
 
   LINK_LIBS PUBLIC
-  MLIRMath
-  MLIRAffine
-  MLIRSCF
+  OMSupport
+  OMKrnlOps
   )

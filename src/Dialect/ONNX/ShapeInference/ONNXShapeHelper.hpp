@@ -24,8 +24,8 @@
 #include "mlir/IR/Value.h"
 #include "mlir/Support/LogicalResult.h"
 
-#include "src/Dialect/ONNX/IndexExpr.hpp"
 #include "src/Dialect/ONNX/ONNXOps.hpp"
+#include "src/Support/IndexExpr.hpp"
 
 using namespace mlir;
 

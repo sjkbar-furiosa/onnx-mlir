@@ -21,9 +21,7 @@
 #include "llvm/ADT/ArrayRef.h"
 #include "llvm/ADT/Sequence.h"
 
-#include "src/Dialect/Krnl/KrnlHelper.hpp"
 #include "src/Dialect/Krnl/KrnlOps.hpp"
-#include "src/Pass/Passes.hpp"
 
 using namespace mlir;
 
@@ -39,12 +37,6 @@ Block *getTopBlock(Operation *op);
 
 /// Retrieve function which contains the current operation.
 FuncOp getContainingFunction(Operation *op);
-
-// Emit a constant of a specific type.
-// Use this function for small values only to avoid unexpected loss in type
-// casting.
-Value emitConstantOp(
-    OpBuilder &rewriter, Location loc, Type type, double value);
 
 //===----------------------------------------------------------------------===//
 // Perform checks or get statistics about Krnl-level operations.

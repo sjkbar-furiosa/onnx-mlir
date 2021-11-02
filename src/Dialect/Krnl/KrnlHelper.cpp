@@ -18,8 +18,7 @@
 #include "mlir/IR/AffineExpr.h"
 
 #include "src/Dialect/Krnl/KrnlOps.hpp"
-
-#include "KrnlHelper.hpp"
+#include "src/Dialect/Krnl/KrnlHelper.hpp"
 
 namespace onnx_mlir {
 

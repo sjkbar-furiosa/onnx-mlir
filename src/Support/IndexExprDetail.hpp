@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-//===---------------IndexExprDetail.hpp - Index expression details---------===
+//===------------- IndexExprDetail.hpp - Index expression details ---------===//
 ////
 //
 // Copyright 2020 The IBM Research Authors.
@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "src/Dialect/ONNX/IndexExpr.hpp"
+#include "src/Support/IndexExpr.hpp"
 
 namespace mlir {
 

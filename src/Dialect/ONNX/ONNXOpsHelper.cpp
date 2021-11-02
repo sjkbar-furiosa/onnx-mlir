@@ -14,9 +14,10 @@
 
 #include "src/Dialect/ONNX/ONNXOpsHelper.hpp"
 #include "src/Dialect/Krnl/KrnlHelper.hpp"
-#include "src/Dialect/ONNX/IndexExpr.hpp"
+#include "src/Dialect/Krnl/KrnlSupport.hpp"
 #include "src/Dialect/ONNX/ONNXOps.hpp"
-#include "src/Support/KrnlSupport.hpp"
+#include "src/Support/Common.hpp"
+#include "src/Support/IndexExpr.hpp"
 
 // Identity affine
 using namespace mlir;

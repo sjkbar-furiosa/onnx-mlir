@@ -27,8 +27,8 @@
 
 #include "src/Dialect/Krnl/KrnlHelper.hpp"
 #include "src/Dialect/Krnl/KrnlTypes.hpp"
-#include "src/Dialect/ONNX/IndexExpr.hpp"
 #include "src/Dialect/ONNX/MLIRDialectBuilder.hpp"
+#include "src/Support/IndexExpr.hpp"
 
 namespace mlir {
 class KrnlOpsDialect : public Dialect {

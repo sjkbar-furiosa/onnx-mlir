@@ -19,3 +19,16 @@
 #else
 #define ATTRIBUTE(x)
 #endif
+
+#include "mlir/IR/Builders.h"
+#include "mlir/IR/Location.h"
+#include "mlir/IR/Types.h"
+#include "mlir/IR/Value.h"
+
+using namespace mlir;
+
+// Emit a constant of a specific type.
+// Use this function for small values only to avoid unexpected loss in type
+// casting.
+Value emitConstantOp(OpBuilder &rewriter, Location loc, Type type,
+                     double value);

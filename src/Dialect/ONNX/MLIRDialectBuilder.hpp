@@ -20,7 +20,7 @@
 #include "mlir/IR/PatternMatch.h"
 #include "mlir/IR/Value.h"
 
-#include "IndexExpr.hpp"
+#include "src/Support/IndexExpr.hpp"
 
 namespace mlir {
 
